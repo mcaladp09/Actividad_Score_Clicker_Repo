@@ -11,6 +11,8 @@ public class Manager : MonoBehaviour
     private float TotalClicks = 0f;
     public Button ClickButton; // Reference to your UI button
     public GameObject Exit_btn; // Reference to the second button GameObject
+    public GameObject LB_btn;
+    public GameObject GamePanel; // Reference to your panel GameObject
 
     private void Start()
     {
@@ -19,18 +21,23 @@ public class Manager : MonoBehaviour
 
     private void Update()
     {
-        clickCooldownTimer += Time.deltaTime;
-
-        if (clickCooldownTimer >= clickCooldownDuration)
+        // Only update the countdown if the panel is active
+        if (GamePanel.activeSelf)
         {
-            ClickButton.interactable = false; // Disable the button
+            clickCooldownTimer += Time.deltaTime;
 
-            // Activate the second button GameObject:
-            Exit_btn.SetActive(true); // Enable the second button
+            if (clickCooldownTimer >= clickCooldownDuration)
+            {
+                ClickButton.interactable = false; // Disable the button
+
+                // Activate the second button GameObject:
+                Exit_btn.SetActive(true); // Enable the second button
+                LB_btn.SetActive(true); // Enable the second button
+            }
+
+            float remainingTime = Mathf.Max(0f, clickCooldownDuration - clickCooldownTimer);
+            CountdownText.text = $"Countdown: {remainingTime:F1} s";
         }
-
-        float remainingTime = Mathf.Max(0f, clickCooldownDuration - clickCooldownTimer);
-        CountdownText.text = $"Countdown: {remainingTime:F1} s";
     }
 
     public void AddClicks()
@@ -40,4 +47,3 @@ public class Manager : MonoBehaviour
         clickCooldownTimer = 0f;
     }
 }
-
